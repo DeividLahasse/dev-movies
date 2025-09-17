@@ -1,18 +1,23 @@
 import { useState, useEffect } from "react";
 
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import Slider from "../../components/slider";
 
 import Button from "../../../src/components/Button/index";
 
-
 import { Background, Info, Poster, Container, ContainerButton } from "./styles";
 import { getImages } from "../../../src/utils/getimages";
 import Modal from "../../components/Modal";
-import { getMovies, getTopMovies, getTopSeries } from "../../services/getData";
+import {
+  getMovies,
+  getTopMovies,
+  getTopSeries,
+  getPopularSeries,
+  getFilmesAvalicao,
+} from "../../services/getData";
 
 function Home() {
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
   const [movie, setMovie] = useState();
   const [topMovies, setTopMovies] = useState();
   const [TopSeries, setTopSeries] = useState();
@@ -21,35 +26,59 @@ function Home() {
 
   const [FilmesAvalicao, setFilmesAvalicao] = useState();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
+    
+
     async function getAllData() {
-      setMovie(await getMovies())
-      setTopMovies(await getTopMovies())
-      setTopSeries(await getTopSeries())
-      setPopularSeries(await getTopSeries())
-      setFilmesAvalicao(await getFilmesAvalicao())
+       console.time('time');
+
+      Promise.all([
+        getMovies(),
+        getTopMovies(),
+        getTopSeries(),
+        getPopularSeries(),
+        getFilmesAvalicao(),
+      ])
+        .then(([movie,topMovie, topSeries, popularSeries, filmesAvaliacao]) => {
+          setMovie(movie);
+          setTopMovies(topMovie);
+          setTopSeries(topSeries);
+          setPopularSeries(popularSeries);
+          setFilmesAvalicao(filmesAvaliacao);
+        })
+     
+        
+
+
     }
 
-  
     getAllData();
-    
   }, []);
 
   return (
     <>
       {movie && (
         <Background $img={getImages(movie.backdrop_path)}>
-          {showModal && <Modal  movieId={movie.id} setShowModal={setShowModal}/>}
+          {showModal && (
+            <Modal movieId={movie.id} setShowModal={setShowModal} />
+          )}
 
           <Container>
             <Info>
               <h1>{movie.title}</h1>
               <p>{movie.overview}</p>
               <ContainerButton>
-                <Button onClick={() => navigate(`/detalhe/${movie.id}`)} red={true}>Assista Agora</Button>
-                <Button onClick={() =>setShowModal(true)} white={false}>Assista o Trailer</Button>
+                <Button
+                  onClick={() => navigate(`/detalhe/${movie.id}`)}
+                  red={true}
+                >
+                  Assista Agora
+                </Button>
+                <Button onClick={() => setShowModal(true)} white={false}>
+                  Assista o Trailer
+                </Button>
               </ContainerButton>
             </Info>
 

@@ -19,11 +19,9 @@ const buttonStyles = css`
 
 export const ButtonFechar = styled.button`
 display:flex;
-
-
-img{
-    height: 15px;
-    width: 15px;
+& img{
+    
+    max-height:15px;
     
 }
 

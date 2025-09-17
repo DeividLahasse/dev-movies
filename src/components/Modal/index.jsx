@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { getMovie } from "../../services/getData";
+import { getMovieVideos } from "../../services/getData";
 
 import { useState } from "react";
 
@@ -13,17 +13,20 @@ function Modal({ movieId, setShowModal }) {
   const [movie, setMovie] = useState();
   useEffect(() => {
     async function getMovies() {
-   setMovie (await getMovie (movieId))
+   setMovie (await getMovieVideos (movieId))
     }
 
     getMovies();
   }, []);
+
+
+
   return (
     <Background onClick={() => setShowModal(false)}>
       {movie && (
         <Container>
           <iframe
-            src={`https://www.youtube.com/embed/${movie.key}`}
+            src={`https://www.youtube.com/embed/${movie[0].key}`}
             title="YouTube Vídeo Player"
             height="500px"
             width="100%"

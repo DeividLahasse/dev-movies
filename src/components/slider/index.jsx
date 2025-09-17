@@ -3,7 +3,7 @@ import { Container } from "./styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 function Slider({ info, title }) {
-  console.log(info, title);
+  
 
   return (
     <Container>
